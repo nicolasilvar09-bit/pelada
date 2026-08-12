@@ -382,7 +382,7 @@
     { name:'Roxo',     hex:'#A855F7' }
   ];
 
-  let S = { players: [], teams: [], matches: [], perTeam: 5, live: null, copa: null, titulos: [], mes: null };
+  let S = { players: [], teams: [], matches: [], perTeam: 6, live: null, copa: null, titulos: [], mes: null };
   let tab = 'elenco';
   let newRating = 3, newPos = 'linha', draftName = '';
   let editP = null, editV = { name:'', rating:3, pos:'linha' };
@@ -436,10 +436,10 @@
   };
 
   const snapshot = () => ({ players:S.players, teams:S.teams, matches:S.matches, perTeam:S.perTeam, live:S.live, copa:S.copa, titulos:S.titulos, mes:S.mes });
-  const VAZIO = () => ({ players: [], teams: [], matches: [], perTeam: 5, live: null, copa: null, titulos: [], mes: null });
+  const VAZIO = () => ({ players: [], teams: [], matches: [], perTeam: 6, live: null, copa: null, titulos: [], mes: null });
 
   /* pelada inicial: elenco, times e partidas já registradas */
-  const SEED = {"players":[{"id":"d55ctyg","name":"Marcelo","rating":5,"pos":"linha","in":true},{"id":"6ce1mrx","name":"Nico","rating":5,"pos":"linha","in":true},{"id":"2lfrcjq","name":"Matheus","rating":5,"pos":"linha","in":true},{"id":"j6c8f01","name":"Marcus","rating":3,"pos":"linha","in":true},{"id":"n2k53al","name":"Bruno Reis","rating":5,"pos":"linha","in":true},{"id":"gtrjmwa","name":"Bruno Samuel","rating":5,"pos":"linha","in":true},{"id":"8dh4cu8","name":"Filipe","rating":5,"pos":"gk","in":true},{"id":"wajwwz9","name":"Wanderson","rating":5,"pos":"linha","in":true},{"id":"nu3538k","name":"Jerfinho","rating":5,"pos":"linha","in":true},{"id":"wlfi2c9","name":"Eduardo Medeiros","rating":5,"pos":"linha","in":true},{"id":"rqcf5zp","name":"Leonardo","rating":5,"pos":"linha","in":true},{"id":"l0hcpqo","name":"Renan","rating":5,"pos":"linha","in":true},{"id":"rg4ds1f","name":"Mauricio","rating":5,"pos":"linha","in":true},{"id":"a7i4d80","name":"Delson","rating":5,"pos":"linha","in":true},{"id":"7np8ntt","name":"Nicolas NG","rating":5,"pos":"linha","in":true},{"id":"x24u1jx","name":"Moises","rating":5,"pos":"linha","in":true},{"id":"cyvudze","name":"Kalleb","rating":5,"pos":"linha","in":true},{"id":"vi8ju2f","name":"Marcos Cordeiro","rating":5,"pos":"linha","in":true},{"id":"sdbuy97","name":"Jacob","rating":5,"pos":"linha","in":true},{"id":"jxes4ya","name":"Eduardo Martins","rating":5,"pos":"linha","in":true},{"id":"7ichvri","name":"Caio Coelho","rating":5,"pos":"linha","in":true},{"id":"xyno15y","name":"Diego","rating":5,"pos":"gk","in":true},{"id":"b42xaqr","name":"Breno Gripp","rating":5,"pos":"linha","in":true},{"id":"t1ebe78","name":"Ruan","rating":5,"pos":"linha","in":true},{"id":"s8oxzqh","name":"Jonas","rating":5,"pos":"linha","in":true},{"id":"59wm00c","name":"Heraldo","rating":5,"pos":"linha","in":true},{"id":"nu6opvf","name":"Erick","rating":5,"pos":"linha","in":true}],"teams":[{"id":"35txwrc","cor":"Vermelho","name":"Time Vermelho","hex":"#EF4444","players":["xyno15y","d55ctyg","vi8ju2f","sdbuy97","gtrjmwa","b42xaqr"]},{"id":"wd9r7tt","cor":"Branco","name":"Time Branco","hex":"#F2EFE4","players":["8dh4cu8","l0hcpqo","7ichvri","n2k53al","rg4ds1f","j6c8f01"]},{"id":"wi22tq3","cor":"Azul","name":"Time Azul","hex":"#3B82F6","players":["s8oxzqh","7np8ntt","x24u1jx","nu3538k","wajwwz9"]},{"id":"17gsqr4","cor":"Preto","name":"Time Preto","hex":"#E5E5E5","players":["2lfrcjq","59wm00c","a7i4d80","rqcf5zp","nu6opvf"]},{"id":"abqtrs3","cor":"Roxo","name":"Time Roxo","hex":"#A855F7","players":["cyvudze","t1ebe78","jxes4ya","wlfi2c9","6ce1mrx"]}],"matches":[{"id":"rd2fzj9","dt":"10/08","a":{"name":"Time Vermelho","hex":"#EF4444","cor":"Vermelho","players":["xyno15y","d55ctyg","vi8ju2f","sdbuy97","gtrjmwa","b42xaqr"]},"b":{"name":"Time Branco","hex":"#F2EFE4","cor":"Branco","players":["8dh4cu8","l0hcpqo","7ichvri","n2k53al","rg4ds1f","j6c8f01"]},"sa":1,"sb":0,"ev":[{"p":"xyno15y","t":"g"}]},{"id":"g11g7pi","dt":"10/08","a":{"name":"Time Vermelho","hex":"#EF4444","cor":"Vermelho","players":["xyno15y","d55ctyg","vi8ju2f","sdbuy97","gtrjmwa","b42xaqr"]},"b":{"name":"Time Azul","hex":"#3B82F6","cor":"Azul","players":["s8oxzqh","7np8ntt","x24u1jx","nu3538k","wajwwz9"]},"sa":1,"sb":1,"ev":[{"p":"vi8ju2f","t":"a"},{"p":"vi8ju2f","t":"g"},{"p":"wajwwz9","t":"g"}]}],"perTeam":5,"live":{"a":0,"b":2,"sa":0,"sb":0,"ev":[]},"copa":null,"titulos":[],"mes":null};
+  const SEED = {"players":[{"id":"d55ctyg","name":"Marcelo","rating":5,"pos":"linha","in":true},{"id":"6ce1mrx","name":"Nico","rating":5,"pos":"linha","in":true},{"id":"2lfrcjq","name":"Matheus","rating":5,"pos":"linha","in":true},{"id":"j6c8f01","name":"Marcus","rating":3,"pos":"linha","in":true},{"id":"n2k53al","name":"Bruno Reis","rating":5,"pos":"linha","in":true},{"id":"gtrjmwa","name":"Bruno Samuel","rating":5,"pos":"linha","in":true},{"id":"8dh4cu8","name":"Filipe","rating":5,"pos":"gk","in":true},{"id":"wajwwz9","name":"Wanderson","rating":5,"pos":"linha","in":true},{"id":"nu3538k","name":"Jerfinho","rating":5,"pos":"linha","in":true},{"id":"wlfi2c9","name":"Eduardo Medeiros","rating":5,"pos":"linha","in":true},{"id":"rqcf5zp","name":"Leonardo","rating":5,"pos":"linha","in":true},{"id":"l0hcpqo","name":"Renan","rating":5,"pos":"linha","in":true},{"id":"rg4ds1f","name":"Mauricio","rating":5,"pos":"linha","in":true},{"id":"a7i4d80","name":"Delson","rating":5,"pos":"linha","in":true},{"id":"7np8ntt","name":"Nicolas NG","rating":5,"pos":"linha","in":true},{"id":"x24u1jx","name":"Moises","rating":5,"pos":"linha","in":true},{"id":"cyvudze","name":"Kalleb","rating":5,"pos":"linha","in":true},{"id":"vi8ju2f","name":"Marcos Cordeiro","rating":5,"pos":"linha","in":true},{"id":"sdbuy97","name":"Jacob","rating":5,"pos":"linha","in":true},{"id":"jxes4ya","name":"Eduardo Martins","rating":5,"pos":"linha","in":true},{"id":"7ichvri","name":"Caio Coelho","rating":5,"pos":"linha","in":true},{"id":"xyno15y","name":"Diego","rating":5,"pos":"gk","in":true},{"id":"b42xaqr","name":"Breno Gripp","rating":5,"pos":"linha","in":true},{"id":"t1ebe78","name":"Ruan","rating":5,"pos":"linha","in":true},{"id":"s8oxzqh","name":"Jonas","rating":5,"pos":"linha","in":true},{"id":"59wm00c","name":"Heraldo","rating":5,"pos":"linha","in":true},{"id":"nu6opvf","name":"Erick","rating":5,"pos":"linha","in":true}],"teams":[{"id":"35txwrc","cor":"Vermelho","name":"Time Vermelho","hex":"#EF4444","players":["xyno15y","d55ctyg","vi8ju2f","sdbuy97","gtrjmwa","b42xaqr"]},{"id":"wd9r7tt","cor":"Branco","name":"Time Branco","hex":"#F2EFE4","players":["8dh4cu8","l0hcpqo","7ichvri","n2k53al","rg4ds1f","j6c8f01"]},{"id":"wi22tq3","cor":"Azul","name":"Time Azul","hex":"#3B82F6","players":["s8oxzqh","7np8ntt","x24u1jx","nu3538k","wajwwz9"]},{"id":"17gsqr4","cor":"Preto","name":"Time Preto","hex":"#E5E5E5","players":["2lfrcjq","59wm00c","a7i4d80","rqcf5zp","nu6opvf"]},{"id":"abqtrs3","cor":"Roxo","name":"Time Roxo","hex":"#A855F7","players":["cyvudze","t1ebe78","jxes4ya","wlfi2c9","6ce1mrx"]}],"matches":[{"id":"rd2fzj9","dt":"10/08","a":{"name":"Time Vermelho","hex":"#EF4444","cor":"Vermelho","players":["xyno15y","d55ctyg","vi8ju2f","sdbuy97","gtrjmwa","b42xaqr"]},"b":{"name":"Time Branco","hex":"#F2EFE4","cor":"Branco","players":["8dh4cu8","l0hcpqo","7ichvri","n2k53al","rg4ds1f","j6c8f01"]},"sa":1,"sb":0,"ev":[{"p":"xyno15y","t":"g"}]},{"id":"g11g7pi","dt":"10/08","a":{"name":"Time Vermelho","hex":"#EF4444","cor":"Vermelho","players":["xyno15y","d55ctyg","vi8ju2f","sdbuy97","gtrjmwa","b42xaqr"]},"b":{"name":"Time Azul","hex":"#3B82F6","cor":"Azul","players":["s8oxzqh","7np8ntt","x24u1jx","nu3538k","wajwwz9"]},"sa":1,"sb":1,"ev":[{"p":"vi8ju2f","t":"a"},{"p":"vi8ju2f","t":"g"},{"p":"wajwwz9","t":"g"}]}],"perTeam":6,"live":{"a":0,"b":2,"sa":0,"sb":0,"ev":[]},"copa":null,"titulos":[],"mes":null};
 
   /* ---------------- perfis (cada um com sua pelada, tudo no aparelho) ---------------- */
   const PKEY = 'pelada:profiles';
@@ -497,8 +497,13 @@
 
   function sortear(){
     const present = S.players.filter(p => p.in);
-    if (present.length < 4) { toast('Marque pelo menos 4 presentes'); return; }
-    const nTeams = Math.max(2, Math.round(present.length / S.perTeam));
+    if (present.length < S.perTeam * 2) {
+      toast('Precisa de pelo menos ' + (S.perTeam*2) + ' presentes'); return;
+    }
+    // times completos + no máximo um incompleto (que fica por último)
+    const cheios = Math.floor(present.length / S.perTeam);
+    const sobra = present.length % S.perTeam;
+    const nTeams = cheios + (sobra ? 1 : 0);
     const teams = [];
     let kits = shuffle(KITS.slice());
     const fin = finalPendente();
@@ -508,24 +513,30 @@
     }
     for (let i=0;i<nTeams;i++) teams.push({ id:uid(), cor:kits[i%kits.length].name, name:'Time '+kits[i%kits.length].name, hex:kits[i%kits.length].hex, players:[] });
 
-    // goleiros primeiro, um por time
+    // o último time é o incompleto quando sobra gente
+    const cap = i => (sobra && i === nTeams-1) ? sobra : S.perTeam;
+
+    // goleiros primeiro, um por time (só nos times completos, se der)
     const gks = shuffle(present.filter(p => p.pos === 'gk'));
     gks.forEach((g,i) => { if (i < nTeams) teams[i].players.push(g.id); });
     const used = new Set(teams.flatMap(t => t.players));
 
     // demais: embaralha (desempate aleatório), ordena por nível e vai pro time
-    // mais fraco e mais vazio — equilibra quantidade E força
+    // mais vazio e mais fraco — respeitando o limite de cada time
     const rest = shuffle(present.filter(p => !used.has(p.id)))
       .sort((a,b) => b.rating - a.rating);
     const force = t => t.players.reduce((s,id) => s + ((byId(id)||{rating:3}).rating), 0);
+    const vagas = i => cap(i) - teams[i].players.length;
 
     rest.forEach(p => {
-      let best = teams[0];
-      teams.forEach(t => {
-        if (t.players.length < best.players.length ||
-           (t.players.length === best.players.length && force(t) < force(best))) best = t;
+      let bi = -1;
+      teams.forEach((t,i) => {
+        if (vagas(i) <= 0) return;
+        if (bi < 0) { bi = i; return; }
+        if (vagas(i) > vagas(bi) || (vagas(i) === vagas(bi) && force(t) < force(teams[bi]))) bi = i;
       });
-      best.players.push(p.id);
+      if (bi < 0) bi = nTeams - 1; // segurança: nunca deixa jogador de fora
+      teams[bi].players.push(p.id);
     });
 
     S.teams = teams;
@@ -1090,7 +1101,9 @@
 
   function renderSorteio(){
     const present = S.players.filter(p=>p.in).length;
-    const nTeams = present >= 4 ? Math.max(2, Math.round(present / S.perTeam)) : 0;
+    const cheios = Math.floor(present / S.perTeam);
+    const sobra = present % S.perTeam;
+    const nTeams = present >= S.perTeam*2 ? cheios + (sobra ? 1 : 0) : 0;
     const teamsHtml = drawing
       ? `<div class="drawing"><div class="b">⚽</div><p>Sorteando os times…</p></div>`
       : (S.teams.length ? `<div class="teams">` + S.teams.map((t,ti) => `
@@ -1098,7 +1111,9 @@
             <div class="team-hd" style="background:${t.hex}1f;color:${t.hex}">
               <span class="jersey" style="background:${t.hex}"></span>
               <input type="text" value="${esc(t.name)}" data-act="tname" data-i="${ti}" maxlength="18" size="12">
-              <span class="team-ov">Nível ${teamOv(t)} · ${t.players.length} jog.</span>
+              <span class="team-ov">${t.players.length < S.perTeam
+                ? `<b style="color:var(--coral)">falta${S.perTeam-t.players.length===1?'':'m'} ${S.perTeam-t.players.length}</b>`
+                : `Nível ${teamOv(t)} · ${t.players.length} jog.`}</span>
             </div>
             <ul>${t.players.map((id,pi) => {
               const p = byId(id) || {name:'?',rating:3,pos:'linha'};
@@ -1109,7 +1124,13 @@
 
     $('#pane-sorteio').innerHTML = `
       <h2 class="sec"><span class="num">2</span> Sorteio</h2>
-      <p class="hint">${present} confirmados · vira <b style="color:var(--cream)">${nTeams||'—'}</b> ${nTeams===1?'time':'times'}. Pode sortear quantas vezes quiser até a galera aprovar — cada sorteio desfaz o anterior. Dá pra renomear cada time clicando no nome.</p>
+      <p class="hint">${present} confirmados · ${
+        present < S.perTeam*2
+          ? `<b style="color:var(--coral)">faltam ${S.perTeam*2 - present}</b> pra fechar 2 times de ${S.perTeam}`
+          : sobra === 0
+            ? `<b style="color:var(--lime)">${cheios} times de ${S.perTeam}, certinho</b>`
+            : `<b style="color:var(--cream)">${cheios} ${cheios===1?'time':'times'} de ${S.perTeam}</b> + 1 com ${sobra} (falta${sobra===S.perTeam-1?'':'m'} ${S.perTeam-sobra} pra completar)`
+      }. Pode sortear quantas vezes quiser — cada sorteio desfaz o anterior. Dá pra renomear cada time clicando no nome.</p>
       <div class="addbox" style="grid-template-columns:1fr auto;align-items:end">
         <div>
           <span class="lbl">Jogadores por time</span>
