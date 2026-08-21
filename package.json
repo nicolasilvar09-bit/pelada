@@ -1,0 +1,25 @@
+{
+  "name": "fut-entre-amigos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Organize sua pelada: sorteio de times, placar, ranking e campeonatos",
+  "scripts": {
+    "sync": "cap sync ios",
+    "build": "cap sync ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/app": "^6.0.1",
+    "@capacitor/haptics": "^6.0.1",
+    "@capacitor/keyboard": "^6.0.2",
+    "@capacitor/share": "^6.0.2",
+    "@capacitor/splash-screen": "^6.0.2",
+    "@capacitor/status-bar": "^6.0.1",
+    "@capacitor/push-notifications": "^6.0.2",
+    "@capacitor/preferences": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}
