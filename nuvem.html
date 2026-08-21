@@ -15,6 +15,7 @@
   html, body { margin:0; padding:0; background:#0b1a10; -webkit-text-size-adjust:100%; min-height:100%; }
   body { overscroll-behavior-y:contain; }
 </style>
+<script src="nativo.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; }
@@ -517,6 +518,10 @@
         },
         async signOut(){ guardar(null); return {}; }
       },
+      async apagarUsuario(){
+        // função criada no banco: apaga peladas, vínculos e o login de uma vez
+        return await req(SB_URL + '/rest/v1/rpc/fea_apagar_conta', { method:'POST', body:'{}' });
+      },
       removeChannel(){}, channel(){ return { on(){ return this; }, subscribe(){ return this; } }; }
     };
   })();
@@ -555,17 +560,6 @@
     const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     return Array.from({length:6}, () => L[(Math.random()*L.length)|0]).join('');
   };
-
-  // elenco inicial do Fut Entre Amigos — entra sozinho na primeira pelada criada
-  const ELENCO = [
-    ['Marcelo','linha'],['Nico','linha'],['Matheus','linha'],['Marcus','linha'],
-    ['Bruno Reis','linha'],['Bruno Samuel','linha'],['Filipe','gk'],['Wanderson','linha'],
-    ['Jerfinho','linha'],['Eduardo Medeiros','linha'],['Leonardo','linha'],['Renan','linha'],
-    ['Mauricio','linha'],['Delson','linha'],['Nicolas NG','linha'],['Moises','linha'],
-    ['Kalleb','linha'],['Marcos Cordeiro','linha'],['Jacob','linha'],['Eduardo Martins','linha'],
-    ['Caio Coelho','linha'],['Diego','gk'],['Breno Gripp','linha'],['Ruan','linha'],
-    ['Jonas','linha'],['Heraldo','linha'],['Erick','linha']
-  ];
 
   async function carregarPeladas(){
     const { data, error } = await db.from('fea_membros')
@@ -838,9 +832,6 @@
       .insert({ nome, codigo: cod, dono: user.id, por_time: 6 }).select().single();
     if (error) { carregando = false; telaAuth.erro = 'Erro ao criar'; render(); return; }
     await db.from('fea_membros').insert({ pelada_id: data.id, user_id: user.id, nome: user.email, admin: true });
-    // já entra com a galera cadastrada
-    await db.from('fea_jogadores').insert(ELENCO.map(([nome,pos]) =>
-      ({ pelada_id: data.id, nome, rating: 5, pos, presente: true })));
     await carregarPeladas();
     carregando = false; telaAuth.erro = '';
     await abrirPelada(Object.assign({}, data, { admin:true }));
@@ -858,6 +849,24 @@
     const p = minhas.find(x => x.codigo.toUpperCase() === cod);
     if (p) await abrirPelada(p); else render();
     toast('Você entrou na pelada!');
+  }
+
+  async function apagarConta(){
+    carregando = true; render();
+    const r = await db.apagarUsuario();   // apaga peladas, vínculos e login
+    if (r && r.error) {
+      // se a função do banco falhar, apaga ao menos os dados
+      const { data: meus } = await db.from('fea_peladas').select('id').eq('dono', user.id);
+      for (const p of (meus || [])) await db.from('fea_peladas').delete().eq('id', p.id);
+      await db.from('fea_membros').delete().eq('user_id', user.id);
+      carregando = false;
+      telaAuth.erro = 'Seus dados foram apagados, mas o login não pôde ser removido. Escreva para misterwiz.angra@gmail.com.';
+      await sair();
+      return;
+    }
+    carregando = false;
+    await sair();
+    toast('Conta apagada');
   }
 
   async function sair(){
@@ -1450,6 +1459,7 @@
         <div class="empty"><b>Sem jogos ainda</b>Assim que a primeira partida for encerrada, o ranking aparece aqui — artilheiro, garçom e o craque da pelada.</div>
         <div class="row" style="margin-top:16px;justify-content:center">
           <button class="btn ghost sm" data-act="copiarcod">👥 Convidar galera</button>
+        <button class="btn ghost sm" data-act="sairpelada">🚪 Sair desta pelada</button>
         </div>`;
       return;
     }
@@ -1496,8 +1506,11 @@
         <button class="btn ghost sm" data-act="copiarcod">👥 Convidar galera</button>
       </div>
       <div class="row" style="margin-top:10px;justify-content:center">
-        <button class="btn danger sm" data-act="reset">Zerar temporada</button>
-      </div>`;
+        <button class="btn danger sm" data-act="apagarconta">Apagar minha conta</button>
+      </div>
+      <p class="legenda" style="text-align:center;margin-top:10px">
+        <a href="privacidade.html" target="_blank" style="color:var(--muted)">Política de privacidade</a>
+      </p>`;
   }
 
   /* ---------------- ícone + manifest (instalar na tela inicial) ---------------- */
@@ -1564,6 +1577,7 @@
   async function compartilhar(){
     const txt = montarResumo();
     try {
+      if (window.Nativo && Nativo.ativo) { const r = await Nativo.compartilhar(txt, 'Resumo da pelada'); if (r) { if (r==='copiado') toast('Resumo copiado!'); return; } }
       if (navigator.share) { await navigator.share({ text: txt }); return; }
     } catch(e){ if (e && e.name === 'AbortError') return; }
     try { await navigator.clipboard.writeText(txt); toast('Resumo copiado! Cola no grupo'); return; } catch(e){}
@@ -1682,7 +1696,7 @@
         return;
       }
       drawing = true; render();
-      setTimeout(() => { drawing = false; sortear(); render(); toast('Times na mão!'); }, 900);
+      setTimeout(() => { drawing = false; sortear(); render(); if (window.Nativo) Nativo.vibrar('forte'); toast('Times na mão!'); }, 900);
     }
     else if (act === 'clearteams') {
       if (el.dataset.sure) { S.teams = []; S.live = null; S.copa = null; save(); render(); toast('Times apagados'); }
@@ -1690,6 +1704,7 @@
     }
     else if (act === 'ev') {
       const s = el.dataset.s;
+      if (window.Nativo) Nativo.vibrar(el.dataset.t === 'g' ? 'gol' : 'leve');
       S.live.ev.push({ p: el.dataset.p, t: el.dataset.t });
       if (el.dataset.t === 'g') S.live[s === 'a' ? 'sa' : 'sb']++;
       save(); render();
@@ -1759,8 +1774,9 @@
       pelada = null; S = VAZIO(); carregarPeladas().then(render);
     }
     else if (act === 'copiarcod') {
-      const txt = 'Entra na nossa pelada! Código: ' + pelada.codigo + '\n' + location.href;
-      if (navigator.share) navigator.share({ text: txt }).catch(()=>{});
+      const txt = 'Entra na nossa pelada no Fut Entre Amigos! Código: ' + pelada.codigo + '\n' + location.href;
+      if (window.Nativo) Nativo.compartilhar(txt, 'Convite da pelada').then(r => { if (r === 'copiado') toast('Convite copiado!'); });
+      else if (navigator.share) navigator.share({ text: txt }).catch(()=>{});
       else navigator.clipboard.writeText(txt).then(()=>toast('Convite copiado!')).catch(()=>toast(pelada.codigo));
     }
     else if (act === 'edit') {
@@ -1831,6 +1847,18 @@
     else if (act === 'selcode') { const t=document.getElementById('codearea'); if(t){t.focus();t.select();} }
     else if (act === 'closecode') { const b=document.getElementById('codebox'); if(b){b.hidden=true;b.innerHTML='';} }
     else if (act === 'dorestore') aplicarRestore();
+    else if (act === 'sairpelada') {
+      if (el.dataset.sure) {
+        db.from('fea_membros').delete().eq('pelada_id', pelada.id).eq('user_id', user.id).then(() => {
+          if (canal) { clearInterval(canal); canal = null; }
+          pelada = null; S = VAZIO(); carregarPeladas().then(render); toast('Você saiu da pelada');
+        });
+      } else { el.dataset.sure = '1'; el.textContent = 'Sair mesmo? Toque de novo'; }
+    }
+    else if (act === 'apagarconta') {
+      if (el.dataset.sure) apagarConta();
+      else { el.dataset.sure = '1'; el.textContent = '⚠️ Apaga TUDO e é definitivo. Toque de novo'; }
+    }
     else if (act === 'sort') { sortKey = el.dataset.k; render(); }
     else if (act === 'share') compartilhar();
     else if (act === 'backup') backup();
@@ -1869,6 +1897,15 @@
     const bx = document.getElementById('codebox'); if (bx) { bx.hidden = true; bx.innerHTML = ''; }
     tab = b.dataset.tab; render();
   });
+
+  // ganchos para o app nativo
+  window.__feaVoltar = () => {
+    const bx = document.getElementById('codebox');
+    if (bx && !bx.hidden) { bx.hidden = true; bx.innerHTML = ''; return true; }
+    if (pelada && tab !== 'elenco') { tab = 'elenco'; render(); return true; }
+    return false;
+  };
+  window.__feaAtualizar = () => { if (pelada) recarregarPartidas(); };
 
   setupPWA();
   (async () => {
