@@ -1,0 +1,67 @@
+workflows:
+  ios-fut-entre-amigos:
+    name: Fut Entre Amigos iOS
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    integrations:
+      app_store_connect: Codemagic
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: br.com.futentreamigos.app
+      vars:
+        BUNDLE_ID: "br.com.futentreamigos.app"
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+        APP_STORE_APPLE_ID: 6803957544
+      node: 20.11.0
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Instalar dependencias
+        script: npm install
+
+      - name: Preparar a pasta web
+        script: |
+          mkdir -p www
+          cp nuvem.html www/index.html
+          cp nativo.js www/nativo.js
+          cp privacidade.html www/privacidade.html
+
+      - name: Gerar o projeto iOS
+        script: |
+          if [ ! -d "ios" ]; then npx cap add ios; fi
+          npx cap sync ios
+
+      - name: Aplicar perfis de assinatura
+        script: xcode-project use-profiles --project "ios/App/App.xcodeproj"
+
+      - name: Numero da build
+        script: |
+          cd ios/App
+          agvtool new-version -all $(($BUILD_NUMBER + 1))
+
+      - name: Compilar
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      email:
+        recipients:
+          - misterwiz.angra@gmail.com
+        notify:
+          success: true
+          failure: true
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
