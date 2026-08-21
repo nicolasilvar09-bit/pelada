@@ -8,9 +8,6 @@ workflows:
       app_store_connect: Codemagic
 
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: br.com.futentreamigos.app
       vars:
         BUNDLE_ID: "br.com.futentreamigos.app"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
@@ -36,8 +33,15 @@ workflows:
           if [ ! -d "ios" ]; then npx cap add ios; fi
           npx cap sync ios
 
-      - name: Aplicar perfis de assinatura
-        script: xcode-project use-profiles --project "ios/App/App.xcodeproj"
+      - name: Preparar assinatura
+        script: |
+          keychain initialize
+          # cria o certificado de distribuicao com chave privada propria
+          app-store-connect certificates create --type IOS_DISTRIBUTION --save || true
+          # busca (e cria, se faltar) certificados e perfis para este bundle
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles --project "ios/App/App.xcodeproj"
 
       - name: Numero da build
         script: |
