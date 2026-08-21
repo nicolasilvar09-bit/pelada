@@ -12,6 +12,7 @@ workflows:
         BUNDLE_ID: "br.com.futentreamigos.app"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
+        XCODE_PROJECT: "ios/App/App.xcodeproj"
         APP_STORE_APPLE_ID: 6803957544
       node: 20.11.0
       xcode: latest
@@ -32,16 +33,27 @@ workflows:
         script: |
           if [ ! -d "ios" ]; then npx cap add ios; fi
           npx cap sync ios
+          echo "--- conteudo de ios/App ---"
+          ls -la ios/App
 
-      - name: Preparar assinatura
+      - name: Buscar certificados e perfis
         script: |
+          set -e
           keychain initialize
-          # cria o certificado de distribuicao com chave privada propria
-          app-store-connect certificates create --type IOS_DISTRIBUTION --save || true
-          # busca (e cria, se faltar) certificados e perfis para este bundle
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          echo "--- listando certificados existentes ---"
+          app-store-connect certificates list --type IOS_DISTRIBUTION || true
+          echo "--- buscando/criando arquivos de assinatura ---"
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create --verbose
+          echo "--- perfis baixados ---"
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "pasta de perfis vazia"
           keychain add-certificates
-          xcode-project use-profiles --project "ios/App/App.xcodeproj"
+          echo "--- certificados na keychain ---"
+          security find-identity -v -p codesigning $(keychain get-default) || true
+
+      - name: Aplicar perfis ao projeto
+        script: |
+          set -e
+          xcode-project use-profiles --project "$XCODE_PROJECT" --verbose
 
       - name: Numero da build
         script: |
