@@ -1,4 +1,3 @@
-# build 14:39:48
 workflows:
   ios-fut-entre-amigos:
     name: Fut Entre Amigos iOS
@@ -35,14 +34,17 @@ workflows:
           if [ ! -d "ios" ]; then npx cap add ios; fi
           npx cap sync ios
 
-      - name: Criar certificado proprio e perfil
+      - name: Assinatura de codigo
         script: |
           set -e
           keychain initialize
+          # chave privada propria (o certificado antigo nao tem chave acessivel)
           openssl genrsa -out /tmp/cert_key.pem 2048
-          app-store-connect certificates create --type IOS_DISTRIBUTION --certificate-key=@file:/tmp/cert_key.pem --save
-          app-store-connect profiles create --bundle-id-identifier "$BUNDLE_ID" --type IOS_APP_STORE --certificate-key=@file:/tmp/cert_key.pem --save
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --certificate-key=@file:/tmp/cert_key.pem --create
+          # busca certificados e perfis; cria o que faltar usando a nossa chave
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --certificate-key=@file:/tmp/cert_key.pem \
+            --create
           keychain add-certificates
           xcode-project use-profiles --project "$XCODE_PROJECT"
 
