@@ -8,6 +8,8 @@ workflows:
       app_store_connect: Codemagic
 
     environment:
+      groups:
+        - assinatura
       vars:
         BUNDLE_ID: "br.com.futentreamigos.app"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
@@ -38,13 +40,7 @@ workflows:
         script: |
           set -e
           keychain initialize
-          # chave privada propria (o certificado antigo nao tem chave acessivel)
-          openssl genrsa -out /tmp/cert_key.pem 2048
-          # busca certificados e perfis; cria o que faltar usando a nossa chave
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --certificate-key=@file:/tmp/cert_key.pem \
-            --create
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --certificate-key="@env:CERTIFICATE_PRIVATE_KEY" --create
           keychain add-certificates
           xcode-project use-profiles --project "$XCODE_PROJECT"
 
